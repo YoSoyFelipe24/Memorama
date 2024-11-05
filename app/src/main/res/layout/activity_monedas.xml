@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:gravity="center"
+    android:background="@color/fondo_monedas"
+    android:fontFamily="@font/bangers"
+    tools:context=".Monedas">
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/back"
+        android:layout_width="91dp"
+        android:layout_height="70dp"
+        android:fontFamily="@font/bangers"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/imagenbutton"
+        android:scaleType="centerInside"
+        android:src="@drawable/back"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.007"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.046"
+        tools:ignore="ImageContrastCheck" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/appCompatImageView"
+        android:layout_width="304dp"
+        android:layout_height="227dp"
+        android:src="@drawable/moneda"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.093"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.336" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/TusMoney"
+        android:layout_marginTop="3dp"
+        android:layout_marginRight="30dp"
+        android:layout_width="305dp"
+        android:layout_height="59dp"
+        android:fontFamily="@font/bangers"
+        android:text="@string/Money"
+        android:textColor="@color/black"
+        android:textSize="40dp"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.09"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appCompatImageView"
+        app:layout_constraintVertical_bias="0.0" />
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/Border_TusMoney"
+        android:layout_width="305dp"
+        android:layout_height="59dp"
+        android:fontFamily="@font/bangers"
+        android:text="@string/Money"
+        android:textColor="@color/gray"
+        android:textSize="40dp"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.09"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appCompatImageView"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/moneyborder"
+        android:layout_width="230dp"
+        android:layout_height="180dp"
+        android:fontFamily="@font/permanent_marker"
+        android:paddingRight="10dp"
+        android:text="@string/moneyactual"
+        android:textAlignment="center"
+        android:textColor="@color/gray"
+        android:textSize="110dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.806"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.142" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/money"
+        android:layout_width="230dp"
+        android:layout_height="180dp"
+        android:fontFamily="@font/permanent_marker"
+        android:text="@string/moneyactual"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="110dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.806"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.142" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/RuletaButton"
+        android:layout_width="286dp"
+        android:layout_height="61dp"
+        android:background="@drawable/bordado_play"
+        android:fontFamily="@font/permanent_marker"
+        android:paddingLeft="2sp"
+        android:text="@string/ruleta"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="25sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.851"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.882"
+        tools:ignore="TextSizeCheck" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/Diario"
+        android:layout_width="286dp"
+        android:layout_height="61dp"
+        android:background="@drawable/bordado_play"
+        android:fontFamily="@font/permanent_marker"
+        android:paddingLeft="2sp"
+        android:text="@string/bonusdiario"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="25sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.851"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.66"
+        tools:ignore="TextSizeCheck" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

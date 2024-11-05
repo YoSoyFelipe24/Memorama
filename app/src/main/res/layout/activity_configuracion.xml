@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:gravity="center"
+    android:background="@color/fondo_config"
+    android:fontFamily="@font/bangers"
+    tools:context=".configuracion">
+
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/scoreborder"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:fontFamily="@font/bangers"
+        android:gravity="center_horizontal"
+        android:paddingBottom="-20sp"
+        android:text="@string/score"
+        android:textColor="@color/play"
+        android:textSize="36sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.922"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.8"
+        tools:ignore="RtlCompat,TextContrastCheck,TextSizeCheck" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/Cerrar_Sesion"
+        android:layout_width="173dp"
+        android:layout_height="46dp"
+        android:background="@drawable/bordado_exit"
+        android:fontFamily="@font/bangers"
+        android:text="@string/cerrar_sesion"
+        android:textAlignment="center"
+        android:textColor="#000000"
+        android:textColorLink="#813B3B"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.91"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.956"
+        tools:ignore="RtlCompat" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/score"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:fontFamily="@font/bangers"
+        android:gravity="center_horizontal"
+        android:paddingBottom="-20sp"
+        android:text="@string/score"
+        android:textColor="@color/score"
+        android:textSize="36sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.93"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.8"
+        tools:ignore="RtlCompat,TextContrastCheck,TextSizeCheck" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/scoretextborder"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:fontFamily="@font/bangers"
+        android:gravity="bottom"
+        android:paddingBottom="-20sp"
+        android:text="@string/scoretext"
+        android:textAlignment="center"
+        android:textColor="@color/play"
+        android:textSize="36sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.922"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.706"
+        tools:ignore="RtlCompat,TextContrastCheck,TextSizeCheck" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/scoretext"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:fontFamily="@font/bangers"
+        android:gravity="bottom"
+        android:paddingBottom="-20sp"
+        android:text="@string/scoretext"
+        android:textAlignment="center"
+        android:textColor="@color/score"
+        android:textSize="36sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.93"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.706"
+        tools:ignore="RtlCompat,TextContrastCheck,TextSizeCheck" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/button_dificultad"
+        android:layout_width="216dp"
+        android:layout_height="69dp"
+        android:fontFamily="@font/bangers"
+        android:textSize="30dp"
+        android:text="@string/dificultad"
+        android:textColor="#000000"
+        android:background="@drawable/bordado_boton_config"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.374"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.195" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/button_cuenta"
+        android:layout_width="216dp"
+        android:fontFamily="@font/bangers"
+        android:textSize="30dp"
+        android:textColor="#000000"
+        android:layout_height="69dp"
+        android:background="@drawable/bordado_boton_config"
+        android:text="@string/cuenta"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.374"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatToggleButton
+        android:id="@+id/button_noti"
+        android:layout_width="216dp"
+        android:textSize="20dp"
+        android:layout_height="69dp"
+        android:textColor="#000000"
+        android:fontFamily="@font/bangers"
+        android:background="@drawable/bordado_boton_config"
+        android:textOff="@string/notificaciones_off"
+        android:textOn="@string/notificaciones_on"
+        android:checked="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.374"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.812"
+        />
+
+    <ImageView
+        android:id="@+id/avatar"
+        android:layout_width="164dp"
+        android:layout_height="136dp"
+        android:background="@drawable/border_avatar"
+        android:scaleType="centerInside"
+        app:layout_constraintBottom_toTopOf="@+id/scoretextborder"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.895"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.462"
+        android:src="@drawable/user"
+        />
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/back"
+        android:layout_width="91dp"
+        android:layout_height="70dp"
+        android:fontFamily="@font/bangers"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/imagenbutton"
+        android:scaleType="centerInside"
+        android:src="@drawable/back"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.007"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.046"
+        tools:ignore="ImageContrastCheck" />
+
+    <TextView
+        android:id="@+id/user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/bangers"
+        android:textSize="30sp"
+        app:layout_constraintBottom_toTopOf="@+id/scoretext"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.868"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/avatar"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <androidx.appcompat.widget.AppCompatToggleButton
+        android:id="@+id/music_toggle"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
+        android:background="@drawable/music_button"
+        android:scaleType="centerInside"
+        android:textOff=""
+        android:textOn=""
+        android:checked="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.025"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.96" />
+
+    <RelativeLayout
+        android:id="@+id/ventana_cuenta"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"> <!-- Inicialmente invisible -->
+        <include layout="@layout/cuenta" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/ventana_registrar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"> <!-- Inicialmente invisible -->
+        <include layout="@layout/registrar" />
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

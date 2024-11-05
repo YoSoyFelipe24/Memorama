@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">Memorama</string>
+    <string name="jugar">JUGAR</string>
+    <string name="config">CONFIGURACIÓN</string>
+    <string name="exit">SALIR</string>
+    <string name="title">CARDCRAZE</string>
+    <string name="scoretext">HIGH SCORE</string>
+    <string name="score">000000\n</string>
+    <string name="moneyactual">00</string>
+    <string name="imagenbutton">_</string>
+    <string name="vidas">05</string>
+    <string name="score_solo">score</string>
+    <string name="dificultad">DIFICULTAD</string>
+    <string name="cuenta">CUENTA</string>
+    <string name="notificaciones_off">NOTIFICACIONES: OFF</string>
+    <string name="notificaciones_on">NOTIFICACIONES: ON</string>
+    <string name="Money">Tus monedas</string>
+    <string name="bonusdiario">Bonus Diario</string>
+    <string name="ruleta">Bonus Ruleta</string>
+    <string name="nombre_de_usuario">Nombre de usuario</string>
+    <string name="contrase_a">Contraseña</string>
+    <string name="iniciar_sesi_n">Iniciar sesión</string>
+    <string name="registrar">Registrar</string>
+    <string name="foto_de_perfil">foto de perfil</string>
+    <string name="cargar_foto">Cargar foto</string>
+    <string name="cerrar_sesion">Cerrar sesion</string>
+</resources>
