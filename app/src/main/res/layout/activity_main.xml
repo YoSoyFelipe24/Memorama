@@ -5,14 +5,14 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/fondo_ini"
+    android:background="@color/confi"
     android:gravity="center"
     android:orientation="horizontal"
     tools:context=".MainActivity">
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/PLAY"
-        android:layout_width="170sp"
+        android:layout_width="171sp"
         android:layout_height="60sp"
         android:background="@drawable/bordado_play"
         android:paddingLeft="2sp"
