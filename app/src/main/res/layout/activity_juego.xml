@@ -233,26 +233,18 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.656" />
 
-    <GridLayout
+    <androidx.gridlayout.widget.GridLayout
         android:id="@+id/gridLayout"
-        android:layout_width="441dp"
-        android:layout_height="231dp"
+        android:layout_width="444dp"
+        android:layout_height="216dp"
         android:layout_gravity="center"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:columnCount="4"
-        android:padding="16dp"
-        android:rowCount="4"
+        app:columnCount="4"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.903"
+        app:layout_constraintHorizontal_bias="0.797"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.702" >
-
-
-    </GridLayout>
+        app:layout_constraintVertical_bias="0.625"
+        app:rowCount="4" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,10 +4,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.GridLayout;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -22,10 +27,10 @@ import java.util.Collections;
 
 public class JuegoActivity extends AppCompatActivity {
 
-    private GridLayout gridLayout;
-    private Button[] buttons;
+    private androidx.gridlayout.widget.GridLayout gridLayout;
+    private ImageButton[] buttons;
     private int[] cardValues;
-    private Button firstCard, secondCard;
+    private ImageButton firstCard, secondCard;
     private int firstCardIndex, secondCardIndex, intentos, CartasAcertadas = 0, pares;
     public int score, high;
     private boolean isFlipping = false, gameFinished;
@@ -73,7 +78,7 @@ public class JuegoActivity extends AppCompatActivity {
 
 
         gridLayout = findViewById(R.id.gridLayout);
-        buttons = new Button[16];
+        buttons = new ImageButton[16];
         cardValues = new int[16];
 
 
@@ -92,27 +97,60 @@ public class JuegoActivity extends AppCompatActivity {
         for (int i = 0; i < 16; i++) {
             cardValues[i] = cards.get(i);
         }
+        // Número de columnas en el GridLayout
+        int numColumns = 4;
 
-        // Crear los botones en la cuadrícula
-        for (int i = 0; i < 16; i++) {
-            final int index = i;
-            buttons[i] = new Button(this);
-            buttons[i].setText("?");
-            buttons[i].setTextSize(14);
-            buttons[i].setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (!isFlipping) {
-                        flipCard(buttons[index], index);
-                    }
+// Configura el GridLayout para que tenga el número de columnas deseadas
+        gridLayout.setColumnCount(numColumns);
+
+// Usa ViewTreeObserver para obtener el ancho del GridLayout después de que se haya renderizado
+        gridLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                // Obtener el ancho del GridLayout
+                int gridWidth = gridLayout.getWidth();
+                int gridHeight = gridLayout.getHeight(); // Altura del GridLayout
+
+                // Calcular el tamaño de cada botón en función del ancho del GridLayout y el número de columnas
+                int buttonSize = gridWidth / numColumns; // Ajusta el valor de margen si es necesario
+                int rowHeight = gridHeight / 4; // Ajuste de tamaño vertical para las filas
+
+                // Crear los botones en la cuadrícula
+                for (int i = 0; i < 16; i++) {
+                    final int index = i;
+                    buttons[i] = new ImageButton(JuegoActivity.this);
+                    buttons[i].setImageResource(R.drawable.card_back); // Imagen de dorso de la carta
+                    buttons[i].setBackgroundColor(Color.TRANSPARENT);
+                    buttons[i].setScaleType(ImageButton.ScaleType.FIT_CENTER);
+
+                    // Configurar el tamaño y márgenes de cada botón
+                    GridLayout.LayoutParams params = new GridLayout.LayoutParams();
+                    params.width = buttonSize;
+                    params.height = rowHeight;
+                    buttons[i].setLayoutParams(params);
+
+                    buttons[i].setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (!isFlipping) {
+                                flipCard(buttons[index], index);
+                            }
+                        }
+                    });
+
+                    gridLayout.addView(buttons[i]);
                 }
-            });
-            gridLayout.addView(buttons[i]);
-        }
+
+                // Eliminar el listener para que el código no se ejecute varias veces
+                gridLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            }
+        });
     }
 
-    private void flipCard(Button button, int index) {
-        button.setText(String.valueOf(cardValues[index]));
+    private void flipCard(ImageButton button, int index) {
+        int cardValue = cardValues[index];
+        int resourceId = getResources().getIdentifier("card_" + cardValue, "drawable", getPackageName());
+        button.setImageResource(resourceId); // Cambia a la imagen correspondiente
 
         if (firstCard == null) {
             // Guardar la primera carta volteada
@@ -151,15 +189,24 @@ public class JuegoActivity extends AppCompatActivity {
                     gameFinished = true;
                 }
             } else {
-                // No coinciden, voltear las cartas de nuevo después de un pequeño retraso
+                // En caso de que las cartas no coincidan
                 gridLayout.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        firstCard.setText("?");
-                        secondCard.setText("?");
+                        // Restaura la imagen de las cartas al dorso
+                        firstCard.setImageResource(R.drawable.card_back); // Cambia "card_back" al nombre de tu imagen de dorso
+                        firstCard.setScaleType(ImageButton.ScaleType.CENTER_INSIDE);
+                        secondCard.setImageResource(R.drawable.card_back);
+                        secondCard.setScaleType(ImageButton.ScaleType.CENTER_INSIDE);
+
+                        // Habilitar las cartas para ser clickeadas nuevamente
+                        firstCard.setEnabled(true);
+                        secondCard.setEnabled(true);
+
+                        // Restablece las cartas seleccionadas y el estado de volteo
                         resetCards();
                     }
-                }, 1000);
+                }, 1000); // Retraso de 1 segundo (puedes ajustar el tiempo)
                 // Restar puntos por un intento
                 score-= 5;
                 Toast.makeText(this, "¡Fallaste! -5 puntos", Toast.LENGTH_SHORT).show();
