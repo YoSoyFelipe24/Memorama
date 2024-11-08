@@ -143,6 +143,13 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.66"
         tools:ignore="TextSizeCheck" />
+    <RelativeLayout
+        android:id="@+id/ventana_ruleta"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"> <!-- Inicialmente invisible -->
+        <include layout="@layout/ruleta" />
+    </RelativeLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

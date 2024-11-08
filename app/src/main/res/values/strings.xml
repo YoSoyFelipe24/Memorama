@@ -24,4 +24,5 @@
     <string name="foto_de_perfil">foto de perfil</string>
     <string name="cargar_foto">Cargar foto</string>
     <string name="cerrar_sesion">Cerrar sesion</string>
+    <string name="girar_ruleta">Girar ruleta</string>
 </resources>

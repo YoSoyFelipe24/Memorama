@@ -1,24 +1,43 @@
 package com.example.memorama;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatImageButton;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import java.util.Random;
+
 public class Monedas extends AppCompatActivity {
 
-    AppCompatImageButton Volver;
+    AppCompatImageButton Volver, cerrar;
     SesionManager prefs;
     AppCompatTextView Money, borde;
+    RelativeLayout ventana_ruleta;
+    AppCompatButton ruleta, diario, girar;
     int money;
+    private final int[] bonuses = {50, 5, 20, 5, 1, 5, 10, 5};  // Los bonos en monedas
+    private int currentBonus;  // Bono que se ganará en esta tirada
+    private int rotationAngle = 0;  // Ángulo de rotación de la ruleta
+    AppCompatImageView rouletteImage;
+
+    TextView bonusCoinsText;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +51,14 @@ public class Monedas extends AppCompatActivity {
         borde = findViewById(R.id.moneyborder);
         Money.setText(String.valueOf(money));
         borde.setText(String.valueOf(money));
+        //ruleta inicializacion
+        ventana_ruleta = findViewById(R.id.ventana_ruleta);
+        ruleta = findViewById(R.id.RuletaButton);
+        diario = findViewById(R.id.Diario);
+        cerrar = ventana_ruleta.findViewById(R.id.cambiar);
+        girar = ventana_ruleta.findViewById(R.id.spinButton);
+        bonusCoinsText = ventana_ruleta.findViewById(R.id.bonusCoinsText);
+        rouletteImage = ventana_ruleta.findViewById(R.id.rouletteImage);
 
         verificarSesion();
 
@@ -42,6 +69,15 @@ public class Monedas extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        //mostrar ruleta
+        ruleta.setOnClickListener(view -> showRuletaOverlay());
+        //ocultar ruleta
+        cerrar.setOnClickListener(view -> hideRuletaOverlay());
+        //Girar ruleta
+        girar.setOnClickListener(view -> spinRoulette());
+
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -75,5 +111,45 @@ public class Monedas extends AppCompatActivity {
             // Hay una sesión activa, permitir que el usuario juegue o continúe
             Toast.makeText(this, "Bienvenido, " + username, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    //ruleta
+    private void showRuletaOverlay() {
+        ventana_ruleta.setVisibility(View.VISIBLE);
+        ruleta.setVisibility(View.GONE);
+        diario.setVisibility(View.GONE);
+    }
+
+    private void hideRuletaOverlay() {
+        ventana_ruleta.setVisibility(View.GONE);
+        ruleta.setVisibility(View.VISIBLE);
+        diario.setVisibility(View.VISIBLE);
+    }
+    @SuppressLint("SetTextI18n")
+    private void spinRoulette() {
+        // Elegir un bono aleatorio
+        Random random = new Random();
+        currentBonus = bonuses[random.nextInt(bonuses.length)];
+
+        // Calcular el ángulo de rotación de la ruleta
+        int spinAngle = random.nextInt(360) + 720; // Girar al menos dos veces (720 grados)
+
+        // Animación de rotación
+        RotateAnimation rotate = new RotateAnimation(rotationAngle, rotationAngle + spinAngle,
+                Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        rotate.setDuration(2000);  // Duración de 2 segundos
+        rotate.setFillAfter(true);  // Mantener el ángulo después de la rotación
+
+        // Iniciar la animación
+        rouletteImage.startAnimation(rotate);
+
+        // Actualizar el ángulo actual
+        rotationAngle += spinAngle;
+
+        // Mostrar el bono de monedas al final de la animación
+        new Handler().postDelayed(() -> {
+            bonusCoinsText.setText("Monedas ganadas: " + currentBonus);
+            prefs.addMoney(currentBonus);
+        }, 2000);  // 2 segundos para esperar a que termine la animación
     }
 }
