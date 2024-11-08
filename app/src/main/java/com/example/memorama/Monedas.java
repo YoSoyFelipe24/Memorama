@@ -3,6 +3,7 @@ package com.example.memorama;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.view.View;
 import android.view.animation.Animation;
@@ -36,6 +37,8 @@ public class Monedas extends AppCompatActivity {
     private int currentBonus;  // Bono que se ganará en esta tirada
     private int rotationAngle = 0;  // Ángulo de rotación de la ruleta
     AppCompatImageView rouletteImage;
+    CountDownTimer timer;
+    private static final long TIEMPO_CONGELACION = 2 * 60 * 1000; // 2 minutos en milisegundos
 
     TextView bonusCoinsText;
     @Override
@@ -70,12 +73,34 @@ public class Monedas extends AppCompatActivity {
             }
         });
 
+        //bonus diario
+        diario.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                prefs.addMoney(10);
+                Toast.makeText(Monedas.this,"Obtuviste 10 monedas", Toast.LENGTH_SHORT).show();
+            }
+
+        });
+
         //mostrar ruleta
         ruleta.setOnClickListener(view -> showRuletaOverlay());
         //ocultar ruleta
-        cerrar.setOnClickListener(view -> hideRuletaOverlay());
+        cerrar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                hideRuletaOverlay();
+                recreate();
+            }
+        });
         //Girar ruleta
-        girar.setOnClickListener(view -> spinRoulette());
+        girar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                spinRoulette();
+                iniciarTiempoDeCongelacion();
+            }
+        });
 
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -151,5 +176,19 @@ public class Monedas extends AppCompatActivity {
             bonusCoinsText.setText("Monedas ganadas: " + currentBonus);
             prefs.addMoney(currentBonus);
         }, 2000);  // 2 segundos para esperar a que termine la animación
+    }
+    private void iniciarTiempoDeCongelacion() {
+        girar.setEnabled(false); // Bloquea el botón de ruleta
+
+        timer = new CountDownTimer(TIEMPO_CONGELACION, 1000) {
+            public void onTick(long millisUntilFinished) {
+                girar.setText("Espera: " + millisUntilFinished / 1000 + "s"); // Opcional: muestra el tiempo restante
+            }
+
+            public void onFinish() {
+                girar.setText("Activar Ruleta");
+                girar.setEnabled(true); // Vuelve a habilitar el botón
+            }
+        }.start();
     }
 }
