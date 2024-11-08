@@ -183,7 +183,7 @@
         tools:ignore="RtlCompat,TextContrastCheck,TextSizeCheck" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/money"
+        android:id="@+id/moneytext"
         android:layout_width="70dp"
         android:layout_height="50dp"
         android:fontFamily="@font/bangers"

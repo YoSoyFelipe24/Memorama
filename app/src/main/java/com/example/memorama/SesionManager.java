@@ -67,4 +67,15 @@ public class SesionManager {
         editor.apply();
     }
 
+    // Método para incrementar el valor de money
+    public void addMoney(int amount) {
+        int currentMoney = getMoney();
+        saveMoney(currentMoney + amount);
+    }
+
+    // Método para restar el valor de money
+    public void subtractMoney(int amount) {
+        int currentMoney = getMoney();
+        saveMoney(currentMoney - amount);
+    }
 }

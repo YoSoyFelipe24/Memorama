@@ -18,6 +18,7 @@ public class Monedas extends AppCompatActivity {
     AppCompatImageButton Volver;
     SesionManager prefs;
     AppCompatTextView Money, borde;
+    int money;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,10 +26,10 @@ public class Monedas extends AppCompatActivity {
         setContentView(R.layout.activity_monedas);
         musicManager.init(this, R.raw.music_memorama);
         Volver = findViewById(R.id.back);
-        prefs= new SesionManager(this);
-        int money = prefs.getMoney();
+        prefs = new SesionManager(this); //Trae los datos del usuario
+        money = prefs.getMoney();
         Money = findViewById(R.id.money);
-        borde = findViewById(R.id.Border_TusMoney);
+        borde = findViewById(R.id.moneyborder);
         Money.setText(String.valueOf(money));
         borde.setText(String.valueOf(money));
 

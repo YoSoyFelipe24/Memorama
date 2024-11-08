@@ -32,7 +32,7 @@ public class JuegoActivity extends AppCompatActivity {
     private int[] cardValues;
     private ImageButton firstCard, secondCard;
     private int firstCardIndex, secondCardIndex, intentos, CartasAcertadas = 0, pares;
-    public int score, high;
+    public int score, money;
     private boolean isFlipping = false, gameFinished;
     AppCompatImageButton Volver;
     private AppCompatTextView scoreTextView, scoreTextViewBorder, HighScoreTextView, HighScoreViewBorder;
@@ -63,6 +63,7 @@ public class JuegoActivity extends AppCompatActivity {
         //Actualizar en UI
         HighScoreViewBorder.setText(String.valueOf(highScore));
         HighScoreTextView.setText(String.valueOf(highScore));
+
 
         Volver.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -169,12 +170,15 @@ public class JuegoActivity extends AppCompatActivity {
                 // Incrementar el puntaje basado en la cantidad de intentos
                 if (intentos == 0) {
                     score += 20;  // Primer intento
+                    money += 15; //aumentar monedas
                     Toast.makeText(this, "¡Acertaste! +20 puntos", Toast.LENGTH_SHORT).show();
                 } else if (intentos == 1) {
                     score += 15;  // Segundo intento
+                    money += 10;
                     Toast.makeText(this, "¡Acertaste! +15 puntos", Toast.LENGTH_SHORT).show();
                 } else {
                     score += 10;  // Tercer intento o más
+                   money += 5;
                     Toast.makeText(this, "¡Acertaste! +10 puntos", Toast.LENGTH_SHORT).show();
                 }
                 intentos = 0; // Reiniciar el contador de intentos
@@ -209,6 +213,7 @@ public class JuegoActivity extends AppCompatActivity {
                 }, 1000); // Retraso de 1 segundo (puedes ajustar el tiempo)
                 // Restar puntos por un intento
                 score-= 5;
+                money-=2;
                 Toast.makeText(this, "¡Fallaste! -5 puntos", Toast.LENGTH_SHORT).show();
                 intentos++;
             }
@@ -228,14 +233,11 @@ public class JuegoActivity extends AppCompatActivity {
         isFlipping = false;
     }
 
-    public int getScore(){
-        return score;
-    }
     //Cuadro de dialogo termino el juegp
     private void AlertaFin(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Juego Terminado")
-                .setMessage("¡Enhorabuena has completado el juego! Tu puntaje es: " + score)
+                .setMessage("¡Enhorabuena has completado el juego! Tu puntaje es: " + score + " y has obetenido " + money + " monedas")
                 .setCancelable(false)
                 .setPositiveButton("Reiniciar", new DialogInterface.OnClickListener() {
                     @Override
@@ -262,6 +264,7 @@ public class JuegoActivity extends AppCompatActivity {
         HighScoreManager.checkAndUpdateHS(this,score);
         updateScore();
         AlertaFin();
+        prefs.saveMoney(money);
     }
     @Override
     protected void onDestroy(){
@@ -292,6 +295,7 @@ public class JuegoActivity extends AppCompatActivity {
         } else {
             // Hay una sesión activa, permitir que el usuario juegue o continúe
             Toast.makeText(this, "A jugar, " + username, Toast.LENGTH_SHORT).show();
+            money = prefs.getMoney();
         }
     }
     private void mostrarAdvertencia(String mensaje) {

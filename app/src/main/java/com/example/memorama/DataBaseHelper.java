@@ -11,6 +11,8 @@ import android.graphics.BitmapFactory;
 
 import androidx.annotation.Nullable;
 
+import java.io.File;
+
 public class DataBaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "users.db";
     private static final int DATABASE_VERSION = 2;
@@ -35,7 +37,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 COLUMN_USERNAME + " TEXT UNIQUE, " +
                 COLUMN_PASSWORD + " TEXT, " +
                 COLUMN_HIGH_SCORE + " INTEGER DEFAULT 0, " +
-                COLUMN_PROFILE_IMAGE + " BLOB, " +
+                COLUMN_PROFILE_IMAGE + " TEXT, " +
                 COLUMN_MONEY + " INTEGER DEFAULT 0)";
         db.execSQL(createTable);
     }
@@ -46,7 +48,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public boolean addUser(String username, String password, byte[] profileImage) {
+    public boolean addUser(String username, String password, String imagePath) {
         if (checkUser(username, password)) {
             return false; // El usuario ya existe
         }
@@ -54,8 +56,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_USERNAME, username);
-        values.put(COLUMN_PASSWORD, password); // Considera hashear la contraseña
-        values.put(COLUMN_PROFILE_IMAGE, profileImage);
+        values.put(COLUMN_PASSWORD, password);
+        values.put(COLUMN_PROFILE_IMAGE, imagePath);  // Guardamos la ruta de la imagen
 
         long result = db.insert(TABLE_USERS, null, values);
         db.close();
@@ -63,13 +65,22 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     }
 
     public boolean checkUser(String username, String password) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.query(TABLE_USERS, new String[]{"*"},
-                COLUMN_USERNAME + "=? AND " + COLUMN_PASSWORD + "=?",
-                new String[]{username, password}, null, null, null);
-        boolean exists = cursor.getCount() > 0; // Retorna true si el usuario existe
-        cursor.close();
-        return exists;
+        SQLiteDatabase db = null;
+        Cursor cursor = null;
+        try {
+            db = this.getReadableDatabase();
+            cursor = db.query(TABLE_USERS, new String[]{"*"},
+                    COLUMN_USERNAME + "=? AND " + COLUMN_PASSWORD + "=?",
+                    new String[]{username, password}, null, null, null);
+            boolean exists = cursor.getCount() > 0;
+            return exists;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            if (cursor != null) cursor.close();
+            if (db != null) db.close();
+        }
     }
 
     public Bitmap getProfileImage(String username) {
@@ -78,15 +89,18 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 COLUMN_USERNAME + "=?", new String[]{username}, null, null, null);
 
         if (cursor != null && cursor.moveToFirst()) {
-            byte[] imageBytes = cursor.getBlob(0); // Obtén el BLOB
-            cursor.close();
-            return BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+            int profileImageColumnIndex = cursor.getColumnIndex(COLUMN_PROFILE_IMAGE);
+            if (profileImageColumnIndex != -1) {
+                byte[] imageBytes = cursor.getBlob(profileImageColumnIndex); // Obtén el BLOB
+                cursor.close();
+                return BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length); // Decodifica el BLOB a Bitmap
+            }
         }
 
         if (cursor != null) {
             cursor.close();
         }
-        return null; // O maneja el caso en que no se encontró la imagen
+        return null; // Si no se encuentra la imagen, retornamos null
     }
 
     public User getUser(String username) {
@@ -95,18 +109,18 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                 COLUMN_USERNAME + "=?", new String[]{username}, null, null, null);
 
         if (cursor != null && cursor.moveToFirst()) {
-            @SuppressLint("Range") String user = cursor.getString(cursor.getColumnIndex(COLUMN_USERNAME));
-            @SuppressLint("Range") byte[] profileImage = cursor.getBlob(cursor.getColumnIndex(COLUMN_PROFILE_IMAGE));
-            @SuppressLint("Range") int highScore = cursor.getInt(cursor.getColumnIndex(COLUMN_HIGH_SCORE));
-            @SuppressLint("Range") int money = cursor.getInt(cursor.getColumnIndex(COLUMN_MONEY));
+            String user = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_USERNAME));
+            byte[] profileImage = cursor.getBlob(cursor.getColumnIndexOrThrow(COLUMN_PROFILE_IMAGE));
+            int highScore = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_HIGH_SCORE));
+            int money = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_MONEY));
 
             cursor.close();
+            db.close();
             return new User(user, profileImage, highScore, money);
         }
 
-        if (cursor != null) {
-            cursor.close();
-        }
-        return null; // Retorna null si no se encuentra el usuario
+        if (cursor != null) cursor.close();
+        db.close();
+        return null;
     }
 }

@@ -20,6 +20,7 @@ public class MainActivity extends AppCompatActivity {
     AppCompatImageButton moneyButton;
     AppCompatTextView HighScoreViewBorder, HighScoreTextView, Monedas;
     SesionManager prefsManager;
+    int money, highScore;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
         if (prefsManager.isLoggedIn()) {
             // Mostrar detalles del usuario
             Toast.makeText(this, "Bienvenido", Toast.LENGTH_SHORT).show();
+            highScore = prefsManager.getHighScore();
+            money = prefsManager.getMoney();
         } else {
             // No hay sesión iniciada, redirigir a pantalla de inicio de sesión o manejarlo de otra forma
             Toast.makeText(this, "No has iniciado sesión", Toast.LENGTH_SHORT).show();
@@ -39,11 +42,8 @@ public class MainActivity extends AppCompatActivity {
         HighScoreViewBorder = findViewById(R.id.scoreborder);
         HighScoreTextView = findViewById(R.id.score);
         moneyButton = findViewById(R.id.buttonmoneda);
-        Monedas = findViewById(R.id.money);
+        Monedas = findViewById(R.id.moneytext);
         musicManager.init(this, R.raw.music_memorama);
-        //Recuperar el high score
-        int highScore = prefsManager.getHighScore();
-        int money = prefsManager.getMoney();
         //Actualizar en UI
         HighScoreViewBorder.setText(String.valueOf(highScore));
         HighScoreTextView.setText(String.valueOf(highScore));

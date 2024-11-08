@@ -1,5 +1,7 @@
 package com.example.memorama;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteConstraintException;
@@ -28,7 +30,10 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Objects;
 
 public class configuracion extends AppCompatActivity {
 
@@ -45,14 +50,17 @@ public class configuracion extends AppCompatActivity {
     TextView usernameText;
     ImageView profileImageView;
     AppCompatButton logoutButton;
+    int highScore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_configuracion);
+        //preferencias
         preferencesManager = new SesionManager(this);
         dbHelper = new DataBaseHelper(this);
+        //Elementos
         Volver = findViewById(R.id.back);
         Dificultad = findViewById(R.id.button_dificultad);
         usernameText = findViewById(R.id.user_name);
@@ -61,13 +69,12 @@ public class configuracion extends AppCompatActivity {
         Cuenta = findViewById(R.id.button_cuenta);
         ventana_cuenta = findViewById(R.id.ventana_cuenta);
         ventana_registrar = findViewById(R.id.ventana_registrar);
-        preferencesManager = new SesionManager(this); // Inicializa tu clase UserPreferences
         Notificacion = findViewById(R.id.button_noti);
         toggleMusic = findViewById(R.id.music_toggle);
         HighScoreViewBorder = findViewById(R.id.scoreborder);
         HighScoreTextView = findViewById(R.id.score);
         //Recuperar el high score
-        int highScore = HighScoreManager.getHighScore(this);
+        highScore = HighScoreManager.getHighScore(this);
         //Actualizar en UI
         HighScoreViewBorder.setText(String.valueOf(highScore));
         HighScoreTextView.setText(String.valueOf(highScore));
@@ -108,15 +115,17 @@ public class configuracion extends AppCompatActivity {
                 AppCompatEditText username = ventana_cuenta.findViewById(R.id.username);
                 AppCompatEditText password = ventana_cuenta.findViewById(R.id.password);
 
-                String user = username.getText().toString();
-                String pass = password.getText().toString();
+                String user = Objects.requireNonNull(username.getText()).toString();
+                String pass = Objects.requireNonNull(password.getText()).toString();
                 IniciarSesion(user,pass);
+                // Actualizar la interfaz después de iniciar sesión
+                mostrarDetallesUsuario();
 
-                // Ocultar la ventana flotante después de iniciar sesión
+                // Ocultar la ventana flotante
                 hideLoginOverlay();
-                recreate();
             }
         });
+        //Registrar ventana
         Registrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -255,9 +264,9 @@ public class configuracion extends AppCompatActivity {
     private void RegistrarUser() {
         AppCompatEditText usernameEditText = ventana_registrar.findViewById(R.id.username);
         AppCompatEditText passwordEditText = ventana_registrar.findViewById(R.id.password);
-
-        String username = usernameEditText.getText().toString().trim();
-        String password = encriptar.encryptPassword(passwordEditText.getText().toString().trim());
+        //Datos de registro
+        String username = Objects.requireNonNull(usernameEditText.getText()).toString().trim();
+        String password = encriptar.encryptPassword(Objects.requireNonNull(passwordEditText.getText()).toString().trim());
 
         // Validación de entrada
         if (username.isEmpty()) {
@@ -271,20 +280,24 @@ public class configuracion extends AppCompatActivity {
         }
 
         // Manejo de la imagen de perfil
-        byte[] profileImage = null;
+        String profileImagePath = null;
         if (profileImageUri != null) {
             try {
+                // Convierte la URI en un Bitmap
                 Bitmap profileImageBitmap = getBitmapFromUri(profileImageUri);
-                profileImage = imageToByteArray(profileImageBitmap);
+
+                // Guarda la imagen en el almacenamiento interno y obtiene la ruta
+                profileImagePath = saveImageToInternalStorage(profileImageBitmap, this, username + "_profile.jpg");
             } catch (IOException e) {
                 Toast.makeText(this, "Error al cargar la imagen", Toast.LENGTH_SHORT).show();
                 return; // Termina el registro si no se puede cargar la imagen
             }
         }
 
-        // Registro del usuario
+// Registro del usuario
         try {
-            boolean isUserAdded = dbHelper.addUser(username, password, profileImage);
+            // Pasa la ruta de la imagen (no el byte[] como antes)
+            boolean isUserAdded = dbHelper.addUser(username, password, profileImagePath);
             if (isUserAdded) {
                 Toast.makeText(this, "Registro exitoso", Toast.LENGTH_SHORT).show();
             } else {
@@ -296,6 +309,7 @@ public class configuracion extends AppCompatActivity {
             Toast.makeText(this, "Error al registrar el usuario", Toast.LENGTH_SHORT).show();
         }
     }
+
     private void IniciarSesion(String username, String password){
         // Encripta la contraseña antes de compararla
         String encryptedPassword = encriptar.encryptPassword(password);
@@ -309,37 +323,57 @@ public class configuracion extends AppCompatActivity {
             Toast.makeText(this, "Nombre de usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show();
         }
     }
+    public byte[] compressImage(Bitmap image) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        image.compress(Bitmap.CompressFormat.JPEG, 50, stream); // Comprime al 50%
+        return stream.toByteArray();
+    }
+
     private Bitmap getBitmapFromUri(Uri uri) throws IOException {
         return MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
     }
-    private byte[] imageToByteArray(Bitmap bitmap) {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream); // O usa CompressFormat.JPEG si prefieres
-        return stream.toByteArray();
+    public String saveImageToInternalStorage(Bitmap bitmap, Context context, String imageName) {
+        File directory = context.getFilesDir();  // Directorio de almacenamiento interno
+        File file = new File(directory, imageName);  // Crea un archivo con el nombre deseado
+        try (FileOutputStream fos = new FileOutputStream(file)) {
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 50, fos);  // Comprime la imagen y guarda el archivo
+            return file.getAbsolutePath();  // Retorna la ruta del archivo
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
+    @SuppressLint("SetTextI18n")
     private void mostrarDetallesUsuario() {
+        // Obtener los detalles del usuario desde las preferencias o el DBHelper
         String username = preferencesManager.getUsername();
-        byte[] profileImage = preferencesManager.getProfileImage();
-        int highScore = preferencesManager.getHighScore();
-
         if (username != null) {
-            usernameText.setText(username);
-            HighScoreTextView.setText(""+highScore);
-            HighScoreViewBorder.setText(""+highScore);
+            // Obtener la imagen de perfil desde la base de datos usando el DBHelper
+            Bitmap profileImageBitmap = dbHelper.getProfileImage(username); // Llamamos al método getProfileImage de DBHelper
+            highScore = preferencesManager.getHighScore();
 
-            if (profileImage != null) {
-                Bitmap bitmap = BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);
-                profileImageView.setImageBitmap(bitmap);
+            // Mostrar el nombre de usuario y el puntaje
+            usernameText.setText(username);
+            HighScoreTextView.setText(" " + highScore);
+            HighScoreViewBorder.setText(" " + highScore);
+
+            // Si hay una imagen de perfil, mostrarla en el ImageView
+            if (profileImageBitmap != null) {
+                profileImageView.setImageBitmap(profileImageBitmap); // Establece la imagen en el ImageView
+            } else {
+                // Si no se encuentra la imagen en la base de datos, se puede poner una imagen predeterminada
+                profileImageView.setImageResource(R.drawable.profile); // Imagen predeterminada si no se encuentra la imagen
             }
 
-            logoutButton.setVisibility(View.VISIBLE); // Muestra el botón de cerrar sesión
+            // Mostrar el botón de cerrar sesión
+            logoutButton.setVisibility(View.VISIBLE);
         } else {
-            // Si no hay usuario, oculta los elementos
+            // Si no hay usuario registrado, establecer valores predeterminados
             usernameText.setText("0001");
             HighScoreTextView.setText("000000");
             HighScoreViewBorder.setText("000000");
-            profileImageView.setImageResource(R.drawable.user);
-            logoutButton.setVisibility(View.GONE); // Oculta el botón de cerrar sesión
+            profileImageView.setImageResource(R.drawable.user); // Imagen predeterminada
+            logoutButton.setVisibility(View.GONE); // Ocultar el botón de cerrar sesión
         }
     }
 }
